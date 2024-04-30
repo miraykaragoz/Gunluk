@@ -1,18 +1,32 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Gunluk
 {
     internal class Program
     {
-        static List<string> gunluk = new List<string>();
+        class Kayit
+        {
+            public string Metin { get; set; }
+            public DateTime KayitTarihi {  get; set; }
+
+            public Kayit (string metin)
+            {
+                Metin = metin;
+                KayitTarihi = DateTime.Now;
+            }
+        }
+
+        static List<Kayit> gunluk = new List<Kayit>();
 
         static void TxtKaydet()
         {
             using StreamWriter writer = new StreamWriter("gunluk.txt");
 
             foreach (var item in gunluk)
-            {                
-                writer.WriteLine(item);
+            {
+                writer.WriteLine(item.KayitTarihi);
+                writer.WriteLine(item.Metin);           
             }
         }       
 
@@ -24,7 +38,14 @@ namespace Gunluk
 
             while ((satir = reader.ReadLine()) != null)
             {
-                gunluk.Add(satir);
+                string yeniKayitTarihi = satir;
+                string metin = reader.ReadLine();
+                DateTime kayitTarihi;
+
+                if (DateTime.TryParse(yeniKayitTarihi, out kayitTarihi))
+                {
+                    gunluk.Add(new Kayit(metin) { KayitTarihi = kayitTarihi });
+                }
             }
         }
 
@@ -34,7 +55,7 @@ namespace Gunluk
 
             if (ilkAcilisMi)
             {
-                Console.WriteLine("Hoş Geldiniz");
+                Console.WriteLine("Hoş Geldiniz!");
             }
 
             Console.WriteLine("Yapılacak İşlemi Seçin");
@@ -42,7 +63,6 @@ namespace Gunluk
             Console.WriteLine("2. Kayıtları listele");
             Console.WriteLine("3. Kayıtları sil");
             Console.WriteLine("4. Çıkış");
-
             Console.Write("Seçiminiz: ");
             char inputSecim = Console.ReadKey().KeyChar;
 
@@ -58,10 +78,15 @@ namespace Gunluk
                     KayitlariSil();
                     break;
                 case '4':
-
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine("Çıkış yapılıyor...");
+                    Console.ResetColor();
                     break;
                 default:
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("\nHatalı Seçim Yaptınız!");
+                    Console.ResetColor();
                     MenuyeDon();
                     break;
             }
@@ -69,26 +94,31 @@ namespace Gunluk
 
         static void MenuyeDon()
         {
-            Console.WriteLine("\nMenüye dönmek için bir tuşa basınız.");
+            Console.WriteLine("\nMenüye dönmek için herhangi bir tuşa basınız.");
             Console.ReadKey(true);
             MenuGoster();
         }
 
-        //static void ZamaniKaydet()
-        //{
-        //    DateTime bugun = DateTime.Now;
-        //    Console.WriteLine("GÜnlüğü kaydettiğin tarih ve saat: " + bugun + ".");
-        //}
-
         static void KayitEkle()
         {
             Console.Clear();
-            Console.WriteLine("Eklemek istediğiz kayıt: ");
-            string inputKayit = Console.ReadLine();
-            //ZamaniKaydet();
-            gunluk.Add(inputKayit);
-            Console.WriteLine("Günlük başarıyla eklendi!");
-            TxtKaydet();
+
+            DateTime bugun = DateTime.Today;
+            bool gunlukteKayitVarMi = gunluk.Any(kayit => kayit.KayitTarihi.Date == bugun);
+
+            if (gunlukteKayitVarMi)
+            {
+                Console.WriteLine("Bugün zaten bir kayıt eklediniz.");
+            }
+            else
+            {
+                Console.WriteLine("Eklemek istediğiniz kayıt: ");
+                string inputKayit = Console.ReadLine();
+                gunluk.Add(new Kayit(inputKayit));
+                Console.WriteLine("Günlük başarıyla eklendi!");
+                TxtKaydet();
+            }
+
             MenuyeDon();
         }       
 
@@ -105,8 +135,22 @@ namespace Gunluk
 
             for (int i = 0; i < gunluk.Count; i++)
             {
-                //ZamaniKaydet();
-                Console.WriteLine($"{i + 1}- {gunluk[i]}");
+                gunluk[i].KayitTarihi.ToString("ddMMyyyy");
+                Console.WriteLine(gunluk[i].KayitTarihi);
+                Console.WriteLine($"{i + 1}- {gunluk[i].Metin}");
+                Console.WriteLine("---------------------------");
+
+                Console.WriteLine("(S)onraki || (A)na Menü");
+                string inputSecim = Console.ReadLine();
+
+                if (inputSecim == "S" || inputSecim == "s")
+                {
+
+                }
+                else if (inputSecim == "A" || inputSecim == "a")
+                {
+                    MenuGoster();
+                }
             }
 
             MenuyeDon();
@@ -122,7 +166,9 @@ namespace Gunluk
             {
                 gunluk.Clear();
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Tüm kayıtlar silindi!");
+                Console.ResetColor();
                 TxtKaydet();
                 MenuyeDon();
             }
@@ -137,8 +183,30 @@ namespace Gunluk
 
         static void Main(string[] args)
         {
-            VerileriYukle();
-            MenuGoster(true);
+            while(true)
+            {
+                string kullaniciAdi = "Miray";
+                string kullaniciSifre = "123";
+
+                Console.WriteLine("Kullanıcı adı giriniz: ");
+                string inputKullaniciAdi = Console.ReadLine();
+                Console.WriteLine("Şifre giriniz: ");
+                string inputKSifre = Console.ReadLine();
+
+                if (kullaniciAdi == inputKullaniciAdi && kullaniciSifre == inputKSifre)
+                {
+                    VerileriYukle();
+                    MenuGoster(true);
+                    break;
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine("Hatalı kullanıcı adı veya şifre!");
+                    Console.ResetColor();
+                }                
+            }           
         }
     }
 }
