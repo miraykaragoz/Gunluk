@@ -87,8 +87,9 @@ namespace Gunluk
                 case '4':
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine("Çıkış yapılıyor...");
+                    Console.WriteLine("Çıkış yapılıyor...");                    
                     Console.ResetColor();
+                    Environment.Exit(0);
                     break;
                 default:
                     Console.ForegroundColor = ConsoleColor.DarkRed;
