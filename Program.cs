@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Gunluk
@@ -114,7 +115,22 @@ namespace Gunluk
 
             if (gunlukteKayitVarMi)
             {
-                Console.WriteLine("Bugün zaten bir kayıt eklediniz.");
+                Console.WriteLine("Bugün zaten bir kayıt eklediniz. Yeni bir kayıt daha eklemek ister misiniz (E/H)");
+                string inputYeniKayit = Console.ReadLine();
+                if ( inputYeniKayit == "E" || inputYeniKayit == "e")
+                {
+                    Console.WriteLine("Eklemek istediğiniz kayıt: ");
+                    string inputKayit = Console.ReadLine();
+                    gunluk.Add(new Kayit(inputKayit));
+                    Console.Clear();
+                    Console.WriteLine($"{inputKayit} Başarıyla eklendi!");
+                    TxtKaydet();
+                    MenuyeDon();
+                }
+                else if (inputYeniKayit == "H" || inputYeniKayit == "h")
+                {
+                    MenuyeDon();
+                }
             }
             else
             {
