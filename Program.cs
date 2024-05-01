@@ -49,6 +49,12 @@ namespace Gunluk
             }
         }
 
+        static string Sor(string soru)
+        {
+            Console.Write(soru);
+            return Console.ReadLine();
+        }
+
         static void MenuGoster(bool ilkAcilisMi = false)
         {
             Console.Clear();
@@ -140,14 +146,25 @@ namespace Gunluk
                 Console.WriteLine($"{i + 1}- {gunluk[i].Metin}");
                 Console.WriteLine("---------------------------");
 
-                Console.WriteLine("(S)onraki || (A)na Menü");
+                Console.WriteLine("1. Sonraki Kayıt || 2. Düzenle || 3. Ana Menü");
                 string inputSecim = Console.ReadLine();
 
-                if (inputSecim == "S" || inputSecim == "s")
+                if (inputSecim == "1")
                 {
 
                 }
-                else if (inputSecim == "A" || inputSecim == "a")
+                else if (inputSecim == "2")
+                {
+                        Console.Clear();
+                        DateTime yeniTarih = DateTime.Now;
+                        string yeniMetin = Sor("Yeni metni giriniz: ");
+                        gunluk[i].KayitTarihi = yeniTarih;
+                        gunluk[i].Metin = yeniMetin;
+                        Console.WriteLine("Metin Başarıyla Düzenlendi.");
+                        TxtKaydet();
+                        MenuyeDon();                    
+                }
+                else if (inputSecim == "3")
                 {
                     MenuGoster();
                 }
